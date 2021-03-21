@@ -53,16 +53,19 @@ class Blockchain(object):
 
         return hex_hash
 
+def main():
+    blockchain = Blockchain()
+    t1 = blockchain.new_transaction("Satoshi", "Mike", '5 BTC')
+    t2 = blockchain.new_transaction("Mike", "Satoshi", '1 BTC')
+    t3 = blockchain.new_transaction("Satoshi", "Hal Finney", '5 BTC')
+    blockchain.new_block(12345)
 
-blockchain = Blockchain()
-t1 = blockchain.new_transaction("Satoshi", "Mike", '5 BTC')
-t2 = blockchain.new_transaction("Mike", "Satoshi", '1 BTC')
-t3 = blockchain.new_transaction("Satoshi", "Hal Finney", '5 BTC')
-blockchain.new_block(12345)
+    t4 = blockchain.new_transaction("Mike", "Alice", '1 BTC')
+    t5 = blockchain.new_transaction("Alice", "Bob", '0.5 BTC')
+    t6 = blockchain.new_transaction("Bob", "Mike", '0.5 BTC')
+    blockchain.new_block(6789)
 
-t4 = blockchain.new_transaction("Mike", "Alice", '1 BTC')
-t5 = blockchain.new_transaction("Alice", "Bob", '0.5 BTC')
-t6 = blockchain.new_transaction("Bob", "Mike", '0.5 BTC')
-blockchain.new_block(6789)
-
-print("Genesis block: ", blockchain.chain)
+    print("Genesis block: ", blockchain.chain)
+    
+if __name__ == "__main__":
+    main()
