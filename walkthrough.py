@@ -65,7 +65,8 @@ def main():
     t6 = blockchain.new_transaction("Bob", "Mike", '0.5 BTC')
     blockchain.new_block(6789)
 
-    print("Genesis block: ", blockchain.chain)
-    
+    print("3-block chain: ", blockchain.chain)
+    print("Blockchain: %s" % json.dumps(blockchain.chain, indent=4, sort_keys = True))
+
 if __name__ == "__main__":
     main()
