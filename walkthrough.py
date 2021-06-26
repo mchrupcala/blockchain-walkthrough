@@ -1,6 +1,7 @@
 import hashlib
 import json
 from time import time
+from flask import Flask,request,render_template
 
 class Blockchain(object):
     def __init__(self):
@@ -9,7 +10,6 @@ class Blockchain(object):
 
         self.new_block(previous_hash="The Times 03/Jan/2009 Chancellor on brink of second bailout for banks.", proof=100)
 
-# Create a new block listing key/value pairs of block information in a JSON object. Reset the list of pending transactions & append the newest block to the chain.
 
     def new_block(self, proof, previous_hash=None):
         block = {
@@ -24,14 +24,10 @@ class Blockchain(object):
 
         return block
 
-#Search the blockchain for the most recent block.
 
     @property
     def last_block(self):
- 
         return self.chain[-1]
-
-# Add a transaction with relevant info to the 'blockpool' - list of pending tx's. 
 
     def new_transaction(self, sender, recipient, amount):
         transaction = {
@@ -40,9 +36,9 @@ class Blockchain(object):
             'amount': amount
         }
         self.pending_transactions.append(transaction)
+
         return self.last_block['index'] + 1
 
-# receive one block. Turn it into a string, turn that into Unicode (for hashing). Hash with SHA256 encryption, then translate the Unicode into a hexidecimal string.
 
     def hash(self, block):
         string_object = json.dumps(block, sort_keys=True)
@@ -65,8 +61,22 @@ def main():
     t6 = blockchain.new_transaction("Bob", "Mike", '0.5 BTC')
     blockchain.new_block(6789)
 
-    print("3-block chain: ", blockchain.chain)
-    print("Blockchain: %s" % json.dumps(blockchain.chain, indent=4, sort_keys = True))
+    app = Flask(__name__)
+    @app.route('/', methods=['GET'])
+    def index():
+        return "<h2 align=center>walkthrough.py.    'GET /chain' to get the current chain</h2>"
+
+    @app.route('/chain', methods=['GET'])
+    def get_chain():
+        chain_data = blockchain.chain
+        response_dict = {"length": len(chain_data), "chain": chain_data}
+        if request.mimetype == "application/json":
+            return json.dumps(response_dict)
+        else:
+            response_json_pretty = json.dumps(response_dict, sort_keys=True, indent=4)
+            return render_template('pretty_json.html', title="chain", json_pretty=response_json_pretty)
+
+    app.run(debug=True, port=8080)
 
 if __name__ == "__main__":
     main()
